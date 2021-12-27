@@ -2,13 +2,14 @@ const { ShewenyClient } = require('sheweny')
 require('dotenv').config()
 
 const client = new ShewenyClient({
-	intents: [],
+	intents: ['GUILDS'],
 	partials: [],
 	admins: [process.env.BOT_DISCORD_ADMIN],
 	mode : process.env.BOT_DISCORD_SHEWENY_MODE,
-	handlers: {
+	managers: {
 		commands: {
 			directory: './commands',
+			autoRegisterApplicationCommands: true,
 		},
 		events: {
 			directory: './events',
@@ -20,9 +21,3 @@ const client = new ShewenyClient({
 })
 
 client.login(process.env.BOT_DISCORD_TOKEN)
-client.handlers.commands?.on('userMissingPermissions', (interaction, missing) => {
-	interaction.reply({
-		content: `You don't have the permission to use this command. (${missing} permission)`,
-		ephemeral: true
-	})
-})
