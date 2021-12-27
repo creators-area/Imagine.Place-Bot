@@ -13,6 +13,9 @@ const client = new ShewenyClient({
 		events: {
 			directory: './events',
 		},
+		buttons: {
+			directory: './interactions/buttons'
+		}
 	},
 })
 

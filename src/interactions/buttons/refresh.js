@@ -1,18 +1,16 @@
-const { Command } = require('sheweny')
+const { Button } = require("sheweny")
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js')
 
-module.exports = class RandomServerCommand extends Command {
+module.exports = class ButtonTest extends Button {
 	constructor(client) {
-		super(client, {
-			name: 'imagine',
-			description: 'Send a random server from imagine.place',
-			type: 'SLASH_COMMAND',
-			category : 'Community',
-		})
+		super(client, ["refresh"])
 	}
 
-	async execute(command) {
-		await command.deferReply().catch(console.error)
+	async execute(button) {
+		if (button.message.interaction.user.id !== button.user.id) {
+			button.reply({ content: `<@${button.user.id}>, this is not your interaction. Use the command to display a server.`, ephemeral: true })
+			return
+		}
 
 		const { data } = await this.client.apiServer.get('/server')
 		const preview = await this.client.rest.request('get', `/invites/${data.invite.replace('https://discord.gg/', '')}?with_counts=true`)
@@ -33,7 +31,7 @@ module.exports = class RandomServerCommand extends Command {
 			.setLabel(`Join ${preview.guild.name}`)
 			.setStyle('LINK')
 			.setURL(`${data.invite}`)
-			
+
 		const buttonRefresh = new MessageButton()
 			.setLabel(`Refresh`)
 			.setCustomId('refresh')
@@ -43,8 +41,8 @@ module.exports = class RandomServerCommand extends Command {
 			.setLabel('Visit imagine.place')
 			.setStyle('LINK')
 			.setURL('https://imagine.place/')
-		
-		const row = new MessageActionRow().addComponents(buttonJoinServer, buttonRefresh, buttonVisitWebside)
-		await command.editReply({ embeds: [embed], components: [row] }).catch(console.error)
+
+		const rowUpdate = new MessageActionRow().addComponents(buttonJoinServer, buttonRefresh, buttonVisitWebside)
+		button.update({ embeds: [embed], components: [rowUpdate] })
 	}
 }
