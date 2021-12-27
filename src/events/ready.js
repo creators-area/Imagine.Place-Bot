@@ -23,6 +23,13 @@ module.exports = class ReadyEvent extends Event {
 			return Promise.reject(error)
 		})
 
+		apiServer.interceptors.request.use((config) => {
+			config.headers['User-Agent'] = process.env.API_USER_AGENT
+			return config
+		}, (error) => {
+			return Promise.reject(error)
+		})
+
 		this.client.apiServer = apiServer
 	}
 }
