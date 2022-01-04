@@ -12,6 +12,11 @@ module.exports = class ReadyEvent extends Event {
 	execute() {
 		console.log(`${this.client.user.tag} is logged in`)
 
+		this.client.user.setActivity({
+			name: `${this.client.guilds.cache.size} servers`,
+			type: `WATCHING`
+		})
+
 		const apiServer = axios.create({
 			baseURL: process.env.API_URL_SERVER,
 			timeout: 1000,
