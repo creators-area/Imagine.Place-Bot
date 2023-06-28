@@ -9,7 +9,7 @@ module.exports = class ReadyEvent extends Event {
 		})
 	}
 
-	execute() {
+	async execute() {
 		console.log(`${this.client.user.tag} is logged in`)
 
 		this.client.user.setActivity({
